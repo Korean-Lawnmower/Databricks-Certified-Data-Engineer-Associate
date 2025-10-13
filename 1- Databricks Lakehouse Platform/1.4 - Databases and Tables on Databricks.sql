@@ -68,7 +68,17 @@ CREATE SCHEMA new_default
 
 -- COMMAND ----------
 
-DESCRIBE DATABASE EXTENDED new_default
+DESCRIBE database EXTENDED new_default
+
+-- COMMAND ----------
+
+use new_default;
+
+create table managed_new_default
+  (width INT, length INT, height INT);
+  
+INSERT INTO managed_new_default
+VALUES (3 INT, 2 INT, 1 INT);
 
 -- COMMAND ----------
 
@@ -88,6 +98,10 @@ LOCATION 'dbfs:/mnt/demo/external_new_default';
   
 INSERT INTO external_new_default
 VALUES (3 INT, 2 INT, 1 INT);
+
+-- COMMAND ----------
+
+-- MAGIC %fs ls 'dbfs:/mnt'
 
 -- COMMAND ----------
 
@@ -126,6 +140,10 @@ DESCRIBE DATABASE EXTENDED custom
 
 -- COMMAND ----------
 
+-- MAGIC %fs ls "dbfs:/"
+
+-- COMMAND ----------
+
 USE custom;
 
 CREATE TABLE managed_custom
@@ -145,11 +163,19 @@ VALUES (3 INT, 2 INT, 1 INT);
 
 -- COMMAND ----------
 
-DESCRIBE EXTENDED managed_custom
+describe extended external_custom
 
 -- COMMAND ----------
 
 DESCRIBE EXTENDED external_custom
+
+-- COMMAND ----------
+
+drop table managed_custom;
+
+-- COMMAND ----------
+
+-- MAGIC %fs ls "/mnt/demo/"
 
 -- COMMAND ----------
 

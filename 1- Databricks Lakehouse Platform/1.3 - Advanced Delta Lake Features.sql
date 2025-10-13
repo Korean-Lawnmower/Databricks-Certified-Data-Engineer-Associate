@@ -14,23 +14,27 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 SELECT * 
-FROM employees VERSION AS OF 4
+FROM employees VERSION AS OF 10
 
 -- COMMAND ----------
 
-SELECT * FROM employees@v4
+SELECT * FROM employees@v10
 
 -- COMMAND ----------
 
-DELETE FROM employees
+delete from employees
 
 -- COMMAND ----------
 
-SELECT * FROM employees
+select * from employees
 
 -- COMMAND ----------
 
-RESTORE TABLE employees TO VERSION AS OF 5
+describe history employees
+
+-- COMMAND ----------
+
+RESTORE TABLE employees TO VERSION AS OF 11
 
 -- COMMAND ----------
 

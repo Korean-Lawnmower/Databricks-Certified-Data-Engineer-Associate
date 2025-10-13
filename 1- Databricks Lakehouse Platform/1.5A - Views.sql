@@ -91,3 +91,38 @@ SHOW TABLES IN global_temp;
 -- COMMAND ----------
 
 SHOW TABLES
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC -------------------------------------------
+
+-- COMMAND ----------
+
+create view view_apple_phones
+as select * from smartphones where brand = "Apple";
+
+-- COMMAND ----------
+
+select * from view_apple_phones;
+
+-- COMMAND ----------
+
+show tables;
+
+-- COMMAND ----------
+
+create temp view temp_view_phone_brands
+as select distinct brand from smartphones;
+
+-- COMMAND ----------
+
+create global temp view global_temp_view_latest_phones as select * from smartphones where year > 2020 order by year desc;
+
+-- COMMAND ----------
+
+select * from global_temp.global_temp_view_latest_phones
+
+-- COMMAND ----------
+
+show tables in global_temp;

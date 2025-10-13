@@ -97,3 +97,51 @@ USING books_updates u
 ON b.book_id = u.book_id AND b.title = u.title
 WHEN NOT MATCHED AND u.category = 'Computer Science' THEN 
   INSERT *
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC #Hands On
+
+-- COMMAND ----------
+
+create table orders as
+select *, _metadata.file_path as file_path from parquet.`${dataset.bookstore}/orders`
+
+-- COMMAND ----------
+
+drop table orders;
+
+-- COMMAND ----------
+
+-- MAGIC %fs ls select * from "mnt
+
+-- COMMAND ----------
+
+select * from orders;
+
+-- COMMAND ----------
+
+create or replace table orders as
+select * from parquet.`${dataset.bookstore}/orders`
+
+-- COMMAND ----------
+
+describe history orders;
+
+-- COMMAND ----------
+
+insert overwrite orders
+select *, current_timestamp() from parquet.`${dataset.bookstore}/orders`
+
+-- COMMAND ----------
+
+create or replace temp view customers_updates as
+select * from json.`${dataset.bookstore}/customers-json-new`;
+
+merge into customers c
+using customers_updates u
+on c.customer_id = u.customer_id
+when matched and c.email is null and u.email is not null then
+update set email = u.email, updated = u.updated
+when not matched then insert *

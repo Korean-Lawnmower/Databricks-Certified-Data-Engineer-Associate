@@ -45,13 +45,18 @@ VALUES
 
 INSERT INTO employees
 VALUES
-  (6, "Kim", 6200.3)
+  (6, "Kim", 6200.3);
+
+INSERT INTO employees
+values
+  (7, "Park", 9999.9);
 
 -- NOTE: When executing multiple SQL statements in the same cell, only the last statement's result will be displayed in the cell output.
 
 -- COMMAND ----------
 
 SELECT * FROM employees
+ORDER BY id;
 
 -- COMMAND ----------
 
@@ -113,7 +118,7 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
--- MAGIC %fs head 'dbfs:/user/hive/warehouse/employees/_delta_log/00000000000000000005.json'
+-- MAGIC %fs head 'dbfs:/user/hive/warehouse/employees/_delta_log/00000000000000000011.json'
 
 -- COMMAND ----------
 

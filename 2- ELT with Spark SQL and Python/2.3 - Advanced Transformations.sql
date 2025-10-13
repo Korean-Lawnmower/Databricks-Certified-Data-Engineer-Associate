@@ -25,8 +25,13 @@ DESCRIBE customers
 
 -- COMMAND ----------
 
-SELECT customer_id, profile:first_name, profile:address:country 
+create or replace temp view temp_view as
+SELECT customer_id, profile 
 FROM customers
+
+-- COMMAND ----------
+
+select * from temp_view
 
 -- COMMAND ----------
 
@@ -58,6 +63,21 @@ FROM parsed_customers
 
 -- COMMAND ----------
 
+SELECT customer_id, profile_struct.first_name, profile_struct.address.country
+FROM parsed_customers
+
+-- COMMAND ----------
+
+create or replace temp view customers_final as
+  select customer_id, profile_struct.*
+  from parsed_customers
+
+-- COMMAND ----------
+
+select * from customers_final
+
+-- COMMAND ----------
+
 CREATE OR REPLACE TEMP VIEW customers_final AS
   SELECT customer_id, profile_struct.*
   FROM parsed_customers;
@@ -76,8 +96,13 @@ FROM orders
 
 -- COMMAND ----------
 
+
+
+-- COMMAND ----------
+
 SELECT order_id, customer_id, explode(books) AS book 
 FROM orders
+order by customer_id
 
 -- COMMAND ----------
 
@@ -86,11 +111,57 @@ FROM orders
 
 -- COMMAND ----------
 
+select customer_id,
+  collect_set(order_id) as orders_set,
+  collect_set(book.book_id) as books_set
+from (
+  SELECT order_id, customer_id, explode(books) AS book 
+  FROM orders
+  order by customer_id
+) as tmp
+group by customer_id
+
+-- COMMAND ----------
+
 SELECT customer_id,
   collect_set(order_id) AS orders_set,
   collect_set(books.book_id) AS books_set
 FROM orders
 GROUP BY customer_id
+
+-- COMMAND ----------
+
+use catalog hive_metastore
+
+-- COMMAND ----------
+
+select * from orders limit 3;
+
+-- COMMAND ----------
+
+-- select
+--   customer_id,
+--   collect_set(flatten(books.book_id)) as book_id_set
+-- from (
+--   select customer_id, explode(books) as books
+--   from orders
+-- )
+-- group by customer_id;
+
+create temp view temp_view as
+SELECT customer_id,
+  collect_set(order_id) AS orders_set,
+  collect_set(books.book_id) AS books_set
+FROM orders
+GROUP BY customer_id
+
+-- COMMAND ----------
+
+select
+  customer_id,
+  explode(orders_set) as order_id,
+  flatten(books_set) as book_id
+from temp_view;
 
 -- COMMAND ----------
 
@@ -128,6 +199,10 @@ SELECT * FROM orders_enriched
 
 -- MAGIC %md
 -- MAGIC ## Set Operations
+
+-- COMMAND ----------
+
+use catalog hive_metastore
 
 -- COMMAND ----------
 
@@ -173,3 +248,29 @@ SELECT * FROM (
 );
 
 SELECT * FROM transactions
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC #hands on
+
+-- COMMAND ----------
+
+select * from customers
+
+-- COMMAND ----------
+
+describe customers;
+
+-- COMMAND ----------
+
+select * from customers limit 3;
+
+-- COMMAND ----------
+
+select customer_id, profile:first_name, profile:address:country
+from customers
+
+-- COMMAND ----------
+
+select from_json(profile) as profile_struct 

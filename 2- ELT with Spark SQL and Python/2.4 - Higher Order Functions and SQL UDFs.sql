@@ -24,7 +24,7 @@ SELECT * FROM orders
 SELECT
   order_id,
   books,
-  FILTER (books, i -> i.quantity >= 2) AS multiple_copies
+  FILTER (books, i -> i.quantity >= 3) AS multiple_copies
 FROM orders
 
 -- COMMAND ----------
@@ -42,6 +42,15 @@ WHERE size(multiple_copies) > 0;
 -- MAGIC %md
 -- MAGIC
 -- MAGIC ## Transforming Arrays
+
+-- COMMAND ----------
+
+select
+  order_id,
+  transform(
+    books, b -> b.withField('subtotal', 100)
+  ) as books_updated
+from orders;
 
 -- COMMAND ----------
 
@@ -68,7 +77,17 @@ RETURN concat("https://www.", split(email, "@")[1])
 
 -- COMMAND ----------
 
-SELECT email, get_url(email) domain
+create or replace temp function get_url(email string)
+returns string
+return concat("https://www.", split(email, "@")[1])
+
+-- COMMAND ----------
+
+describe function extended get_url
+
+-- COMMAND ----------
+
+SELECT email, get_url(email) as domain
 FROM customers
 
 -- COMMAND ----------

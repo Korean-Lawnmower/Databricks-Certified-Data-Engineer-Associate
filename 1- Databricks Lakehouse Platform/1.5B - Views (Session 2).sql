@@ -21,11 +21,24 @@ SELECT * FROM global_temp.global_temp_view_latest_phones;
 
 -- COMMAND ----------
 
-DROP TABLE smartphones;
-
-DROP VIEW view_apple_phones;
-DROP VIEW global_temp.global_temp_view_latest_phones;
+use catalog hive_metastore;
 
 -- COMMAND ----------
 
+show tables;
 
+-- COMMAND ----------
+
+show tables in global_temp;
+
+-- COMMAND ----------
+
+select * from global_temp.global_temp_view_latest_phones
+
+-- COMMAND ----------
+
+drop table smartphones;
+
+-- COMMAND ----------
+
+show tables in global_temp;
