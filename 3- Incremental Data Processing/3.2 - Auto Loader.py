@@ -40,6 +40,10 @@ display(files)
 
 # COMMAND ----------
 
+# MAGIC %fs ls "dbfs:/mnt/demo/orders_checkpoint/_schemas"
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC SELECT * FROM orders_updates
 
@@ -60,13 +64,17 @@ load_new_data()
 
 # COMMAND ----------
 
+load_new_data()
+
+# COMMAND ----------
+
 files = dbutils.fs.ls(f"{dataset_bookstore}/orders-raw")
 display(files)
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT count(*) FROM orders_updates
+# MAGIC select count(*) from orders_updates
 
 # COMMAND ----------
 

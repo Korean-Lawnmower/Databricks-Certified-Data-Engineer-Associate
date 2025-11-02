@@ -53,6 +53,10 @@ print(full_name)
 
 # COMMAND ----------
 
+dbutils.fs.help()
+
+# COMMAND ----------
+
 dbutils.help()
 
 # COMMAND ----------

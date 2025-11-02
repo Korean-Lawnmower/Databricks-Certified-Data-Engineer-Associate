@@ -100,6 +100,19 @@ DESCRIBE FUNCTION EXTENDED get_url
 
 -- COMMAND ----------
 
+create function website_sorter(email string)
+returns string
+return case
+  when email like "%.com" then "Commercial"
+  when email like "%.org" then "non-profit"
+  when email like "%.edu" then "educational"
+  else
+    concat("unknown type for : ", split(email, "@")[1])
+  end;
+
+
+-- COMMAND ----------
+
 CREATE FUNCTION site_type(email STRING)
 RETURNS STRING
 RETURN CASE 
@@ -111,10 +124,13 @@ RETURN CASE
 
 -- COMMAND ----------
 
-SELECT email, site_type(email) as domain_category
+SELECT email, website_sorter(email) as domain_category
 FROM customers
 
 -- COMMAND ----------
 
-DROP FUNCTION get_url;
-DROP FUNCTION site_type;
+show user functions
+
+-- COMMAND ----------
+
+
